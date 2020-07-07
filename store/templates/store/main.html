@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+	<title>Corona Defense</title>
+
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+	<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+	 <link href="https://fonts.googleapis.com/css?family=B612+Mono|Cabin:400,700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="fonts/icomoon/style.css">
+
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
+  <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
+
+  <link rel="stylesheet" href="{% static 'css/jquery.fancybox.min.css' %}">
+
+  <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.css' %}">
+
+  <link rel="stylesheet" href="{% static 'fonts/flaticon/font/flaticon.css' %}">
+
+  <link rel="stylesheet" href="{% static 'css/aos.css' %}">
+  <link href="{% static 'css/jquery.mb.YTPlayer.min.css' %}" media="all" rel="stylesheet" type="text/css">
+
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+
+	<script type="text/javascript">
+		var user = '{{request.user}}'
+
+		function getToken(name) {
+		    var cookieValue = null;
+		    if (document.cookie && document.cookie !== '') {
+		        var cookies = document.cookie.split(';');
+		        for (var i = 0; i < cookies.length; i++) {
+		            var cookie = cookies[i].trim();
+		            // Does this cookie string begin with the name we want?
+		            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+		                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+		                break;
+		            }
+		        }
+		    }
+		    return cookieValue;
+		}
+		var csrftoken = getToken('csrftoken')
+
+		function getCookie(name) {
+		    // Split cookie string and get all individual name=value pairs in an array
+		    var cookieArr = document.cookie.split(";");
+
+		    // Loop through the array elements
+		    for(var i = 0; i < cookieArr.length; i++) {
+		        var cookiePair = cookieArr[i].split("=");
+
+		        /* Removing whitespace at the beginning of the cookie name
+		        and compare it with the given string */
+		        if(name == cookiePair[0].trim()) {
+		            // Decode the cookie value and return
+		            return decodeURIComponent(cookiePair[1]);
+		        }
+		    }
+
+		    // Return null if not found
+		    return null;
+		}
+		var cart = JSON.parse(getCookie('cart'))
+
+		if (cart == undefined){
+			cart = {}
+			console.log('Cart Created!', cart)
+			document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
+		}
+		console.log('Cart:', cart)
+
+	</script>
+<style> .navbar {
+  min-height: 80px;
+}
+
+.navbar-brand {
+  padding: 0 15px;
+  height: 80px;
+  line-height: 80px;
+}
+
+.navbar-toggle {
+  /* (80px - button height 34px) / 2 = 23px */
+  margin-top: 23px;
+  padding: 9px 10px !important;
+}
+
+@media (min-width: 768px) {
+  .navbar-nav > li > a {
+    /* (80px - line-height of 27px) / 2 = 26.5px */
+    padding-top: 26.5px;
+    padding-bottom: 26.5px;
+    line-height: 27px;
+  }
+}</style>
+</head>
+
+	<body>
+ <nav class="navbar navbar navbar-expand-lg navbar-light bg">
+	  <a class="navbar-brand" href="{% url 'home' %}"><img style="height:90px; width:120px;" class="logo" src="{% static 'images/cdlogo.png' %}"></a>
+	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	    <span class="navbar-toggler-icon"></span>
+	  </button>
+
+	  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+	    <ul class="navbar-nav mr-auto">
+			     <li class="nav-item active">
+	        <a class="nav-link" href="{% url 'blog' %}">Blog<span class="sr-only">(current)</span></a>
+	      </li>
+	  <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="{% url 'store' %}" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Products
+        </a>
+		  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">Vitamins & Supplements</a>
+          <a class="dropdown-item" href="{% url 'store' %}">Water Ionizers & Filters</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+			<li class="nav-item">
+				<a class="nav-link" href="{% url 'about' %}">About<span class="sr-only">(current)</span></a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="{% url 'policy' %}">Policy<span class="sr-only">(current)</span></a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="{% url 'contact' %}">Contact<span class="sr-only">(current)</span></a>
+			</li>
+
+	    </ul>
+          <div class="col-12 col-lg-6 ml-auto d-flex">
+            <div class="ml-md-auto top-social d-none d-lg-inline-block">
+              <a href="#" class="d-inline-block p-3"><span class="icon-facebook"></span></a>
+                <a href="#" class="d-inline-block p-3"><span class="icon-twitter"></span></a>
+                <a href="#" class="d-inline-block p-3"><span class="icon-instagram"></span></a>
+            </div>
+            <form action="#" class="search-form d-inline-block">
+
+              <div class="d-flex">
+                <input type="email" class="form-control" placeholder="Search...">
+                <button type="submit" class="btn btn-secondary" ><span class="icon-search">Go</span></button>
+              </div>
+            </form>
+
+
+          </div>
+	    <div class="form-inline my-2 my-lg-0">
+			{% if user.is_authenticated %}
+	     	<a href="{% url 'logout' %}"class="btn btn-secondary">Logout</a>
+			{% else %}
+			<a href="{% url 'login' %}"class="btn btn-secondary">Login</a>
+			{% endif %}
+
+	     	<a href="{% url 'cart' %}">
+	    		<img  id="cart-icon" src="{% static 'images/cart.png' %}">
+	    	</a>
+
+	    	<p id="cart-total">{{cartItems}}</p>
+
+	    </div>
+	  </div>
+	</nav>
+
+
+     <div class="container">
+            <br>
+            {% block content %}
+
+
+            {% endblock content %}
+         </div>
+
+
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+	<script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+	  <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+  <script src="{% static 'js/jquery-migrate-3.0.1.min.js' %}"></script>
+  <script src="{% static 'js/jquery-ui.js' %}"></script>
+  <script src="{% static 'js/popper.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+  <script src="{% static 'js/jquery.stellar.min.js' %}"></script>
+  <script src="{% static 'js/jquery.countdown.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap-datepicker.min.js' %}"></script>
+  <script src="{% static 'js/jquery.easing.1.3.js' %}"></script>
+  <script src="{% static 'js/aos.js' %}"></script>
+  <script src="{% static 'js/jquery.fancybox.min.js' %}"></script>
+  <script src="{% static 'js/jquery.sticky.js' %}"></script>
+  <script src="{% static 'js/jquery.mb.YTPlayer.min.js' %}"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	 <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

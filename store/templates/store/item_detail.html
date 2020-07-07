@@ -1,0 +1,120 @@
+{% extends "store/main.html" %}
+{% load static %}
+ {% block content %}
+
+  <!--Main layout-->
+  <main class="mt-5 pt-4">
+    <div class="container dark-grey-text mt-5">
+
+      <!--Grid row-->
+      <div class="row wow fadeIn">
+
+        <!--Grid column-->
+        <div class="col-md-6 mb-4">
+
+          <img style="height:80%;" src="{{product.imageURL}}" class="img-fluid" alt="">
+
+        </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-md-6 mb-4">
+
+          <!--Content-->
+          <div class="p-4">
+
+            <div class="mb-3">
+              <a href="">
+                <span class="badge purple mr-1">{{product.name}}</span>
+              </a>
+              <a href="">
+                <span class="badge blue mr-1">Water Ionizer</span>
+              </a>
+              <a href="">
+                <span class="badge red mr-1">Bestseller</span>
+              </a>
+            </div>
+
+            <p class="lead">
+              <span class="mr-1">
+                <del>$100</del>
+              </span>
+              <span>{{product.price}}</span>
+            </p>
+
+            <p class="lead font-weight-bold">Description</p>
+
+            <p>{{product.description}}</p>
+
+            <form class="d-flex justify-content-left">
+              <!-- Default input -->
+              <input type="number" value="1" aria-label="Search" class="form-control" style="width: 100px">
+              <button data-product="{{product.id}}" data-action="add"   class="btn btn-primary btn-md my-0 p update-cart add-btn" type="submit">Add to cart
+              </button>
+
+            </form>
+
+          </div>
+          <!--Content-->
+
+        </div>
+        <!--Grid column-->
+
+      </div>
+      <!--Grid row-->
+
+      <hr>
+
+      <!--Grid row-->
+      <div class="row d-flex justify-content-center wow fadeIn">
+
+        <!--Grid column-->
+        <div class="col-md-6 text-center">
+
+          <h4 class="my-4 h4">Additional information</h4>
+
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus suscipit modi sapiente illo soluta odit
+            voluptates,
+            quibusdam officia. Neque quibusdam quas a quis porro? Molestias illo neque eum in laborum.</p>
+
+        </div>
+        <!--Grid column-->
+
+      </div>
+    </div>
+  </main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<div class="container">-->
+<!--  <div class="row">-->
+<!--    <img  class="post-img" src="{{product.imageURL}}">-->
+<!--  <div>-->
+<!--        <h1>{% block title %} {{ product.name }}{% endblock title %}</h1>-->
+<!--        <p class=" text-muted"></p>-->
+<!--        <p class="card-text ">{{object.description}}</p>-->
+<!--  </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+
+{% endblock content %}
+
