@@ -1,12 +1,16 @@
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
+from django.views.decorators.cache import never_cache
 import json
+from django.shortcuts import render, get_object_or_404
 from django.views import generic
 import datetime
 from django.conf import settings
 from .models import *
+from .forms import *
 from .utils import cookieCart, cartData, guestOrder
 from django.contrib.auth import authenticate, login
+from django.utils.cache import add_never_cache_headers
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.shortcuts import render
@@ -66,16 +70,126 @@ def home(request):
 
     return render(request, 'store/home.html', context)
 
+@never_cache
 def blog(request):
     data = cartData(request)
 
     cartItems = data['cartItems']
     order = data['order']
     items = data['items']
+
     products = Product.objects.all()
+    template_name = 'store/blog.html'
+    post = Post.objects.all()[0]
+    current_post = Post.objects.all()[0]
     posts = Post.objects.all()
-    context = {'products': products, 'cartItems': cartItems, 'post_list':posts}
-    return render(request, 'store/blog.html', context)
+    comments = post.comments.filter(active=True)
+    new_comment = None
+
+
+    if request.method != 'POST':
+        if request.user.is_authenticated:
+            comment_form = UserCommentForm()
+        else:
+            comment_form = CommentForm()
+
+        return render(request, template_name, {'post': post,
+                                               'current_post': current_post,
+                                               'posts': posts,
+                                               'comments': comments,
+                                               'new_comment': new_comment,
+                                               'comment_form': comment_form})
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            comment_form = UserCommentForm(data=request.POST)
+        else:
+            comment_form = CommentForm(data=request.POST)
+        # comment_form.fields['name'] = request.user.customer.name
+        # comment_form.fields['email'] = request.user.customer.email
+
+        if comment_form.is_valid():
+            # Create Comment object but don't save to database yet
+            new_comment = comment_form.save(commit=False)
+            # Assign the current post to the comment
+            new_comment.post = post
+            # Assign user to comment
+            new_comment.user_id = request.user.customer.pk
+            # Assign username as name
+            new_comment.name = request.user.customer.name
+            # Save the comment to the database
+            new_comment.save()
+            return redirect('comment_pending')
+    else:
+        comment_form = CommentForm()
+        if request.user.is_authenticated:
+            comment_form = UserCommentForm()
+    context = {'products': products, 'cartItems': cartItems, 'post_list': posts, 'post': post,
+               'current_post': current_post,
+               'posts': posts,
+               'comments': comments,
+               'new_comment': new_comment,
+               'comment_form': comment_form}
+    return render(request, template_name, context)
+
+def comment_pending(request):
+    data = cartData(request)
+
+    cartItems = data['cartItems']
+    order = data['order']
+    items = data['items']
+
+    products = Product.objects.all()
+    template_name = 'store/comment_pending.html'
+    post = Post.objects.all()[0]
+    current_post = Post.objects.all()[0]
+    posts = Post.objects.all()
+    comments = post.comments.filter(active=True)
+    new_comment = None
+
+
+    if request.method != 'POST':
+        if request.user.is_authenticated:
+            comment_form = UserCommentForm()
+        else:
+            comment_form = CommentForm()
+
+        return render(request, template_name, {'post': post,
+                                               'current_post': current_post,
+                                               'posts': posts,
+                                               'comments': comments,
+                                               'new_comment': new_comment,
+                                               'comment_form': comment_form})
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            comment_form = UserCommentForm(data=request.POST)
+        else:
+            comment_form = CommentForm(data=request.POST)
+        # comment_form.fields['name'] = request.user.customer.name
+        # comment_form.fields['email'] = request.user.customer.email
+
+        if comment_form.is_valid():
+            # Create Comment object but don't save to database yet
+            new_comment = comment_form.save(commit=False)
+            # Assign the current post to the comment
+            new_comment.post = post
+            # Assign user to comment
+            new_comment.user_id = request.user.customer.pk
+            # Assign username as name
+            new_comment.name = request.user.customer.name
+            # Save the comment to the database
+            new_comment.save()
+            return redirect('comment_pending')
+    else:
+        comment_form = CommentForm()
+        if request.user.is_authenticated:
+            comment_form = UserCommentForm()
+    context = {'products': products, 'cartItems': cartItems, 'post_list': posts, 'post': post,
+               'current_post': current_post,
+               'posts': posts,
+               'comments': comments,
+               'new_comment': new_comment,
+               'comment_form': comment_form}
+    return render(request, template_name, context)
 
 
 # registration view if needed
@@ -103,10 +217,8 @@ def register(request):
     context = {'products': products, 'cartItems': cartItems, }
     return render(request, 'store/register.html', context)
 
-from .models import Post
-from .forms import CommentForm, UserCommentForm
-from django.shortcuts import render, get_object_or_404
 
+@never_cache
 def post_detail(request, slug):
     template_name = 'store/post_detail.html'
     post = get_object_or_404(Post, slug=slug)
@@ -146,6 +258,7 @@ def post_detail(request, slug):
             new_comment.name = request.user.customer.name
             # Save the comment to the database
             new_comment.save()
+            return redirect('comment_pending')
     else:
         comment_form = CommentForm()
         if request.user.is_authenticated:
