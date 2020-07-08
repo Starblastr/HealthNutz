@@ -61,7 +61,7 @@ ROOT_URLCONF = 'ecommerce.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'store/templates/store')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -125,7 +125,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 SITE_ID = 1
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+SITE_ID = 1
 STATIC_URL = '/static/'
+
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
@@ -134,3 +137,5 @@ MEDIA_URL = '/images/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
