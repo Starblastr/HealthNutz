@@ -61,6 +61,32 @@ class Product(models.Model):
         except:
             url = ''
         return url
+class Meta_Product(models.Model):
+    class Meta:
+        abstract = True
+    name = models.CharField(max_length=200)
+    price = models.FloatField(max_length=200)
+    digital = models.BooleanField(default=False, null=True, blank=True)
+    image = models.ImageField(null=True, blank=True)
+    slug = models.SlugField(max_length=200, null=True, blank=True)
+    description = models.TextField(max_length=500)
+    def __str__(self):
+        return self.name
+
+    @property
+    def imageURL(self):
+        try:
+            url = self.image.url
+        except:
+            url = ''
+        return url
+
+class Book(Meta_Product):
+    author = models.CharField(max_length=200)
+
+class Supplement(Meta_Product):
+    brand = models.CharField(max_length=200)
+
 
 
 class Order(models.Model):
